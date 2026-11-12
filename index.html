@@ -234,6 +234,13 @@ footer b{color:#fff;font-weight:800}
 .rsv .msg.ok{color:#9fe3b0}
 .rsv .msg.err{color:#ff9b9b}
 .rsv button[disabled]{opacity:.6;cursor:default}
+.rsv-modal{position:fixed;inset:0;z-index:1000;display:none;align-items:center;justify-content:center;padding:24px;background:rgba(0,0,0,.65);backdrop-filter:blur(4px)}
+.rsv-modal.open{display:flex}
+.rsv-modal .box{max-width:420px;width:100%;background:#12141c;border:1px solid var(--line);border-radius:18px;padding:36px 32px;text-align:center;color:#fff}
+.rsv-modal .icon{width:56px;height:56px;margin:0 auto 18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;background:rgba(159,227,176,.12);color:#9fe3b0}
+.rsv-modal h3{font-size:22px;font-weight:700;margin-bottom:10px}
+.rsv-modal p{font-size:15px;line-height:1.6;color:var(--text)}
+.rsv-modal button{margin-top:24px;width:100%;height:50px;border:0;border-radius:999px;background:#fff;color:#111;font:inherit;font-weight:700;cursor:pointer}
 @media (max-width:560px){.rsv{padding:34px 24px}}
 
 .rv{opacity:0;transform:translateY(26px);transition:opacity .9s ease,transform .9s ease}
@@ -604,6 +611,15 @@ footer b{color:#fff;font-weight:800}
   </div>
 </section>
 
+<div class="rsv-modal" id="rsvModal" role="dialog" aria-modal="true" aria-labelledby="rsvModalTitle">
+  <div class="box">
+    <div class="icon">✓</div>
+    <h3 id="rsvModalTitle">사전예약이 완료되었습니다</h3>
+    <p>MOVLOG에 관심 가져 주셔서 감사합니다.<br>출시 소식을 가장 먼저 알려드릴게요.</p>
+    <button type="button" id="rsvModalClose">확인</button>
+  </div>
+</div>
+
 <footer>
   <div class="wrap">
     <b>MOVLOG</b>
@@ -674,6 +690,14 @@ footer b{color:#fff;font-weight:800}
 
   function show(text,type){msg.textContent=text;msg.className='msg '+(type||'');}
 
+  var modal=document.getElementById('rsvModal');
+  var closeBtn=document.getElementById('rsvModalClose');
+  function openModal(){modal.classList.add('open');closeBtn.focus();}
+  function closeModal(){modal.classList.remove('open');}
+  closeBtn.addEventListener('click',closeModal);
+  modal.addEventListener('click',function(e){if(e.target===modal)closeModal();});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape')closeModal();});
+
   form.addEventListener('submit',function(ev){
     ev.preventDefault();
     var f=form.elements;
@@ -690,10 +714,13 @@ footer b{color:#fff;font-weight:800}
     data.append('source',f.source.value);
 
     btn.disabled=true;show('신청을 보내는 중입니다…');
-    fetch(ENDPOINT,{method:'POST',mode:'no-cors',body:data})
-      .then(function(){
+    fetch(ENDPOINT,{method:'POST',body:data})
+      .then(function(r){return r.text();})
+      .then(function(t){
+        if(t.trim()!=='ok')throw new Error('bad response');
         form.reset();form.elements.source.value=src;
-        show('사전예약이 완료되었습니다. 출시 소식을 가장 먼저 알려드릴게요.','ok');
+        show('사전예약이 완료되었습니다.','ok');
+        openModal();
         if(typeof gtag==='function'){gtag('event','generate_lead',{user_type:data.get('user_type')});}
       })
       .catch(function(){
