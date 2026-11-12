@@ -234,6 +234,13 @@ footer b{color:#fff;font-weight:800}
 .rsv .msg.ok{color:#9fe3b0}
 .rsv .msg.err{color:#ff9b9b}
 .rsv button[disabled]{opacity:.6;cursor:default}
+.kakao-fab{position:fixed;right:24px;bottom:24px;z-index:900;display:flex;align-items:center;gap:8px;height:52px;padding:0 20px;border-radius:999px;background:#FEE500;color:#191919;font-weight:700;font-size:15px;text-decoration:none;box-shadow:0 8px 24px rgba(0,0,0,.35);transition:transform .2s}
+.kakao-fab:hover{transform:translateY(-2px)}
+.kakao-fab svg{width:22px;height:22px;flex:none}
+.rsv .ask{font-size:14px;color:var(--muted);text-align:center}
+.rsv .ask a{color:#FEE500;font-weight:600;text-decoration:none}
+.rsv .ask a:hover{text-decoration:underline}
+@media(max-width:600px){.kakao-fab{right:16px;bottom:16px;height:48px;padding:0 16px;font-size:14px}}
 .rsv-modal{position:fixed;inset:0;z-index:1000;display:none;align-items:center;justify-content:center;padding:24px;background:rgba(0,0,0,.65);backdrop-filter:blur(4px)}
 .rsv-modal.open{display:flex}
 .rsv-modal .box{max-width:420px;width:100%;background:#12141c;border:1px solid var(--line);border-radius:18px;padding:36px 32px;text-align:center;color:#fff}
@@ -595,6 +602,7 @@ footer b{color:#fff;font-weight:800}
         <label class="chk"><input type="checkbox" name="agree" required>개인정보 수집 및 이용에 동의합니다</label>
         <button type="submit" class="btn fill">사전예약 신청하기</button>
         <p class="msg" id="rsvMsg" role="status" aria-live="polite"></p>
+        <p class="ask">궁금한 점이 있으신가요? <a href="https://pf.kakao.com/_CICNX/chat" target="_blank" rel="noopener" data-kakao>카카오톡으로 문의하기</a></p>
         <p class="fine">사전예약은 서비스 출시 전 관심 등록이며, 실제 제품 구매나 이용을 확정하는 절차는 아닙니다.</p>
       </form>
     </div>
@@ -610,6 +618,11 @@ footer b{color:#fff;font-weight:800}
     <div class="giant" aria-hidden="true">MOVLOG</div>
   </div>
 </section>
+
+<a class="kakao-fab" href="https://pf.kakao.com/_CICNX/chat" target="_blank" rel="noopener" data-kakao aria-label="카카오톡으로 문의하기">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#191919" d="M12 3C6.48 3 2 6.58 2 11c0 2.83 1.84 5.31 4.61 6.73l-.94 3.44c-.08.3.26.54.52.37l4.1-2.71c.56.08 1.13.12 1.71.12 5.52 0 10-3.58 10-8s-4.48-8-10-8z"/></svg>
+  문의하기
+</a>
 
 <div class="rsv-modal" id="rsvModal" role="dialog" aria-modal="true" aria-labelledby="rsvModalTitle">
   <div class="box">
@@ -673,6 +686,13 @@ footer b{color:#fff;font-weight:800}
   dust('dustInner',1300,196,296,.6);
   dust('dustOuter',500,130,306,.35);
 })();
+
+/* kakao inquiry click tracking (GA4 when installed) */
+document.querySelectorAll('[data-kakao]').forEach(function(a){
+  a.addEventListener('click',function(){
+    if(typeof gtag==='function'){gtag('event','click_kakao',{position:a.classList.contains('kakao-fab')?'floating':'form'});}
+  });
+});
 
 /* pre-reservation form -> Google Sheets (Apps Script) */
 (function(){
