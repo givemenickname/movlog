@@ -1,0 +1,754 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MOVLOG | 움직임을 기록하고, 가능성을 발견하다</title>
+<meta name="description" content="움직임을 기록하고, 가능성을 발견하다. 카메라 없이, 센서만으로 시작하는 모션 분석. MOVLOG">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+:root{
+  --bg:#050507;
+  --ink:#ffffff;
+  --text:#b6b6c0;
+  --muted:#71717d;
+  --line:rgba(255,255,255,.16);
+  --line2:rgba(255,255,255,.08);
+  --blue:#3a52ff;
+  --blue2:#8296ff;
+  --lime:#c0bf34;
+  --purple:#afa1ea;
+  --max:1160px;
+  --disp:'Unbounded','Pretendard Variable',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:72px}
+body{
+  font-family:'Pretendard Variable',Pretendard,'Noto Sans KR',system-ui,sans-serif;
+  background:var(--bg);color:var(--text);line-height:1.7;
+  word-break:keep-all;-webkit-font-smoothing:antialiased;overflow-x:hidden;
+}
+body::after{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:100;opacity:.06;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:var(--max);margin:0 auto;padding:0 28px}
+section{padding:150px 0;position:relative;border-top:1px solid var(--line2)}
+h2{
+  font-size:clamp(32px,4.8vw,62px);line-height:1.18;color:var(--ink);
+  font-weight:800;letter-spacing:-.045em;
+}
+.lead{margin-top:24px;font-size:18px;color:var(--muted);max-width:560px}
+.sec-head{margin-bottom:76px}
+.num{font-family:var(--disp);font-weight:500;letter-spacing:0}
+
+/* buttons */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;
+  height:56px;padding:0 32px;border-radius:999px;font-size:16px;font-weight:600;
+  font-family:inherit;cursor:pointer;color:#fff;border:1px solid var(--line);
+  background:rgba(255,255,255,.03);transition:.3s;
+}
+.btn:hover{border-color:#fff;background:rgba(255,255,255,.1)}
+.btn.fill{background:#fff;color:#050507;border-color:#fff;box-shadow:0 0 40px rgba(130,150,255,.35)}
+.btn.fill:hover{background:var(--blue2);border-color:var(--blue2);box-shadow:0 0 60px rgba(58,82,255,.7)}
+.btn.sm{height:40px;padding:0 20px;font-size:14px}
+
+/* nav */
+nav{
+  position:fixed;inset:0 0 auto 0;height:68px;z-index:60;
+  background:rgba(5,5,7,.7);backdrop-filter:blur(16px);border-bottom:1px solid var(--line2);
+}
+.nav-in{height:100%;display:flex;align-items:center;justify-content:space-between}
+.logo{display:flex;align-items:center;gap:11px;font-size:20px;font-weight:800;color:#fff;letter-spacing:-.03em}
+.logo svg{width:26px;height:26px}
+.menu{display:flex;gap:40px;font-size:15px;color:var(--text)}
+.menu a:hover{color:#fff}
+
+/* ===== hero ===== */
+.hero{min-height:100vh;padding-top:68px;display:flex;flex-direction:column;overflow:hidden;border-top:0;padding-bottom:0}
+.spot{position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(640px circle at var(--mx,70%) var(--my,35%),rgba(80,110,255,.17),transparent 62%)}
+.lines{position:absolute;inset:68px 0 0;pointer-events:none;
+  -webkit-mask-image:linear-gradient(180deg,transparent,#000 35%);mask-image:linear-gradient(180deg,transparent,#000 35%)}
+.lines .wrap,.lines .g{height:100%}
+.lines .g{display:grid;grid-template-columns:repeat(4,1fr);border-right:1px solid var(--line)}
+.lines .g i{border-left:1px solid var(--line)}
+.hero-main{flex:1;display:grid;grid-template-columns:1.02fr 1fr;align-items:center;position:relative;padding-top:40px}
+.hero h1{
+  font-size:clamp(40px,6vw,88px);line-height:1.12;color:#fff;
+  font-weight:800;letter-spacing:-.05em;margin-bottom:34px;
+}
+.hero h1 em{font-style:normal;background:linear-gradient(100deg,#fff 0%,#8296ff 70%,#3a52ff);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{font-size:18px;color:var(--text);max-width:460px;margin-bottom:40px}
+.cta{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:28px}
+.support{font-size:14px;color:var(--muted)}
+.hero-art{position:relative;margin-right:-8vw;transition:transform .4s ease-out}
+.hero-art svg{display:block;width:100%;height:auto;overflow:visible}
+.float{animation:floaty 7s ease-in-out infinite}
+@keyframes floaty{50%{transform:translateY(-14px)}}
+.pulse{animation:pulse 3.4s ease-in-out infinite}
+@keyframes pulse{50%{opacity:.55}}
+.cells{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--line);position:relative}
+.cell{position:relative;padding:22px 22px 30px;min-height:150px;display:flex;flex-direction:column;justify-content:space-between;border-left:1px solid var(--line)}
+.cell:last-child{border-right:1px solid var(--line)}
+.cell::before{content:"";position:absolute;left:-4px;top:-4px;width:7px;height:7px;border-radius:50%;background:#fff;box-shadow:0 0 14px #fff}
+.cell .num{font-size:13px;color:var(--muted)}
+.cell b{font-size:20px;color:#fff;font-weight:600;letter-spacing:-.02em}
+
+/* ===== sensor callout ===== */
+.cal-d{display:block;width:100%;height:auto;overflow:visible}
+.cal-m{display:none}
+.cal-m .z{border:1.5px solid #fff}
+.cal-m .z svg{display:block;width:100%;height:auto}
+.cal-m .zc{font-size:14px;color:#fff;text-align:right;margin:8px 0 22px}
+.specs{display:grid;grid-template-columns:repeat(5,1fr);border-top:1px solid var(--line);margin-top:28px}
+.specs div{padding:22px 18px 6px;border-left:1px solid var(--line)}
+.specs div:first-child{border-left:0;padding-left:0}
+.specs small{display:block;font-size:13px;color:var(--muted);margin-bottom:4px}
+.specs b{font-size:18px;color:#fff;font-weight:600}
+
+/* ===== value ===== */
+.value{display:grid;grid-template-columns:1fr 1fr;gap:96px;align-items:center}
+.pts{border-top:1px solid var(--line)}
+.pt{display:flex;align-items:center;gap:28px;padding:34px 0;border-bottom:1px solid var(--line);transition:.3s}
+.pt:hover{padding-left:12px;background:linear-gradient(90deg,rgba(58,82,255,.14),transparent)}
+.pt .num{font-size:14px;color:var(--blue2);width:30px}
+.pt p{font-size:24px;color:#fff;font-weight:600;letter-spacing:-.03em}
+
+/* ===== steps (roadmap grid) ===== */
+.steps{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--line);position:relative}
+.steps::before{content:"";position:absolute;left:0;top:-1px;height:1px;width:100%;background:linear-gradient(90deg,transparent,#8296ff,#fff);transform:scaleX(0);transform-origin:left;transition:transform 1.8s ease}
+.steps.in::before{transform:scaleX(1)}
+.st{position:relative;border-left:1px solid var(--line);padding:26px 26px 40px;min-height:360px;display:flex;flex-direction:column;transition:.4s}
+.st:last-child{border-right:1px solid var(--line)}
+.st::before{content:"";position:absolute;left:-4px;top:-4px;width:7px;height:7px;border-radius:50%;background:#fff;box-shadow:0 0 14px #fff}
+.st:hover{background:radial-gradient(circle at 50% 0,rgba(58,82,255,.22),transparent 70%)}
+.st .num{font-size:15px;color:var(--muted)}
+.st svg{width:60px;height:60px;margin:46px 0 auto;stroke:#fff;fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.st h4{font-size:24px;color:#fff;font-weight:700;letter-spacing:-.03em;margin:44px 0 10px}
+.st p{font-size:15px;color:var(--muted);min-height:3.4em}
+
+/* ===== orbit ===== */
+.orbit{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,580px) minmax(0,1fr);gap:70px;align-items:center}
+.ov svg{display:block;width:100%;height:auto;overflow:visible}
+.spin{transform-origin:320px 320px;animation:spin 260s linear infinite}
+.spin.r{animation-duration:420s;animation-direction:reverse}
+@keyframes spin{to{transform:rotate(360deg)}}
+.oc{display:flex;flex-direction:column;gap:90px}
+.ann{position:relative}
+.ann h4{font-size:22px;color:#fff;font-weight:700;letter-spacing:-.03em;margin-bottom:8px;display:flex;align-items:center;gap:10px}
+.ann h4 i{width:9px;height:9px;display:inline-block;border:1.5px solid #fff}
+.ann p{font-size:15.5px;color:var(--muted)}
+.oc.left .ann{text-align:right}
+.oc.left .ann h4{justify-content:flex-end}
+.ann::after{content:"";position:absolute;top:15px;width:60px;border-top:1px dotted rgba(255,255,255,.55)}
+.oc.left .ann::after{right:-66px}
+.oc.right .ann::after{left:-66px}
+.note{margin-top:60px;font-size:14px;color:var(--muted);text-align:center}
+
+/* ===== compare ===== */
+.cmp{display:grid;grid-template-columns:1fr 1.25fr;gap:20px}
+.cmp .a{border:1px solid var(--line);padding:56px 44px;display:flex;flex-direction:column;justify-content:center;min-height:420px}
+.cmp small{display:block;font-size:14px;font-weight:600;color:var(--muted);margin-bottom:24px}
+.cmp .q{font-size:32px;line-height:1.35;font-weight:800;letter-spacing:-.04em;color:#6a6a76;text-decoration:line-through;text-decoration-thickness:1.5px;margin-bottom:18px}
+.cmp .a p{font-size:16px;color:var(--muted)}
+.cmp .b{position:relative;border:1px solid rgba(130,150,255,.5);padding:44px 40px 36px;background:radial-gradient(ellipse at 80% 0,rgba(58,82,255,.28),transparent 60%),#08090e;overflow:hidden}
+.cmp .b small{color:var(--blue2)}
+.cmp .b .q2{font-size:26px;line-height:1.4;font-weight:800;color:#fff;letter-spacing:-.035em;margin-bottom:12px}
+.cmp .b p{font-size:16px;color:var(--text);margin-bottom:26px}
+.cmp .b svg{display:block;width:100%;height:auto}
+.cap{font-size:12.5px;color:var(--muted);margin-top:10px}
+
+/* ===== audience ===== */
+.aud{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--line)}
+.aud div{position:relative;border-left:1px solid var(--line);padding:30px 26px 46px;min-height:260px;display:flex;flex-direction:column;justify-content:flex-end;transition:.4s}
+.aud div:last-child{border-right:1px solid var(--line)}
+.aud div::before{content:"";position:absolute;left:-4px;top:-4px;width:7px;height:7px;border-radius:50%;background:var(--c,#fff);box-shadow:0 0 14px var(--c,#fff)}
+.aud div:hover{background:linear-gradient(0deg,rgba(255,255,255,.05),transparent)}
+.aud h4{font-size:22px;color:#fff;font-weight:700;letter-spacing:-.03em;margin-bottom:10px}
+.aud p{font-size:15px;color:var(--muted);min-height:3.4em}
+
+/* ===== notice ===== */
+.notice{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.notice>div{border:1px solid var(--line);padding:48px 42px;background:linear-gradient(160deg,rgba(255,255,255,.04),transparent 60%)}
+.notice h4{font-size:22px;color:#fff;font-weight:700;letter-spacing:-.03em;margin-bottom:18px}
+.notice p{font-size:16px;color:var(--text)}
+.notice ul{list-style:none}
+.notice li{padding:15px 0 15px 26px;border-top:1px solid var(--line2);position:relative;font-size:16px;color:var(--text)}
+.notice li:first-child{border-top:0;padding-top:0}
+.notice li::before{content:"";position:absolute;left:0;top:25px;width:8px;height:8px;background:var(--lime);box-shadow:0 0 12px var(--lime)}
+.notice li:first-child::before{top:10px}
+
+/* ===== faq ===== */
+.faq{max-width:880px}
+details{border-bottom:1px solid var(--line)}
+details:first-child{border-top:1px solid var(--line)}
+summary{list-style:none;cursor:pointer;padding:30px 0;font-size:21px;font-weight:600;color:#fff;letter-spacing:-.025em;display:flex;justify-content:space-between;align-items:center;gap:20px}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"";width:26px;height:26px;flex:none;border:1px solid var(--line);border-radius:50%;
+  background:linear-gradient(#fff,#fff) center/10px 1.5px no-repeat,linear-gradient(#fff,#fff) center/1.5px 10px no-repeat;transition:.3s}
+details[open] summary::after{transform:rotate(45deg);border-color:#fff}
+details p{padding:0 0 32px;font-size:17px;color:var(--muted);max-width:700px}
+
+/* ===== final ===== */
+.final{text-align:center;overflow:hidden;padding:170px 0 0}
+.final::before{content:"";position:absolute;left:50%;top:38%;width:1100px;height:1100px;transform:translate(-50%,-50%);
+  background:radial-gradient(circle,rgba(110,130,255,.35),rgba(58,82,255,.1) 40%,transparent 66%);pointer-events:none}
+.final::after{content:"";position:absolute;left:0;right:0;top:38%;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.85),transparent);filter:blur(.6px);pointer-events:none}
+.final .wrap{position:relative;z-index:1}
+.final h2{margin-bottom:22px}
+.final p{font-size:18px;color:var(--text);margin-bottom:44px}
+.giant{
+  font-family:var(--disp);font-weight:700;line-height:1;white-space:nowrap;
+  font-size:clamp(56px,17.5vw,260px);letter-spacing:-.02em;margin-top:110px;
+  color:transparent;-webkit-text-stroke:1px rgba(255,255,255,.28);
+  -webkit-mask-image:linear-gradient(180deg,#000 30%,transparent 95%);mask-image:linear-gradient(180deg,#000 30%,transparent 95%);
+  user-select:none;
+}
+footer{border-top:1px solid var(--line2);padding:34px 0 50px;font-size:14px;color:var(--muted)}
+footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+footer b{color:#fff;font-weight:800}
+
+.pt p small{display:block;font-size:15px;font-weight:400;color:var(--muted);letter-spacing:0;margin-top:4px}
+.sec-head .lead+.lead{margin-top:14px}
+.value .lead+.lead{margin-top:14px}
+.rsv{border:1px solid var(--line);padding:44px 42px;display:flex;flex-direction:column;gap:18px;background:linear-gradient(160deg,rgba(255,255,255,.04),transparent 60%)}
+.rsv label{display:flex;flex-direction:column;gap:8px;font-size:15px;color:#fff;font-weight:600}
+.rsv input[type=text]{height:50px;padding:0 16px;border:1px solid var(--line);border-radius:10px;background:rgba(255,255,255,.03);color:#fff;font:inherit;font-weight:400}
+.rsv input[type=text]:focus{outline:none;border-color:var(--blue2)}
+.rsv .chk{flex-direction:row;align-items:center;gap:10px;font-weight:400;color:var(--text)}
+.rsv .chk input{width:18px;height:18px;accent-color:var(--blue)}
+.rsv .btn{margin-top:6px}
+.rsv .fine{font-size:13px;color:var(--muted)}
+.rsv select{height:50px;padding:0 16px;border:1px solid var(--line);border-radius:10px;background:rgba(255,255,255,.03);color:#fff;font:inherit;font-weight:400}
+.rsv select:focus{outline:none;border-color:var(--blue2)}
+.rsv select option{color:#111}
+.rsv .consent{font-size:13px;line-height:1.6;color:var(--muted);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.rsv .msg{font-size:15px;font-weight:600;min-height:1em}
+.rsv .msg.ok{color:#9fe3b0}
+.rsv .msg.err{color:#ff9b9b}
+.rsv button[disabled]{opacity:.6;cursor:default}
+.kakao-fab{position:fixed;right:24px;bottom:24px;z-index:900;display:flex;align-items:center;gap:8px;height:52px;padding:0 20px;border-radius:999px;background:#FEE500;color:#191919;font-weight:700;font-size:15px;text-decoration:none;box-shadow:0 8px 24px rgba(0,0,0,.35);transition:transform .2s}
+.kakao-fab:hover{transform:translateY(-2px)}
+.kakao-fab svg{width:22px;height:22px;flex:none}
+.rsv .ask{font-size:14px;color:var(--muted);text-align:center}
+.rsv .ask a{color:#FEE500;font-weight:600;text-decoration:none}
+.rsv .ask a:hover{text-decoration:underline}
+@media(max-width:600px){.kakao-fab{right:16px;bottom:16px;height:48px;padding:0 16px;font-size:14px}}
+.rsv-modal{position:fixed;inset:0;z-index:1000;display:none;align-items:center;justify-content:center;padding:24px;background:rgba(0,0,0,.65);backdrop-filter:blur(4px)}
+.rsv-modal.open{display:flex}
+.rsv-modal .box{max-width:420px;width:100%;background:#12141c;border:1px solid var(--line);border-radius:18px;padding:36px 32px;text-align:center;color:#fff}
+.rsv-modal .icon{width:56px;height:56px;margin:0 auto 18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;background:rgba(159,227,176,.12);color:#9fe3b0}
+.rsv-modal h3{font-size:22px;font-weight:700;margin-bottom:10px}
+.rsv-modal p{font-size:15px;line-height:1.6;color:var(--text)}
+.rsv-modal button{margin-top:24px;width:100%;height:50px;border:0;border-radius:999px;background:#fff;color:#111;font:inherit;font-weight:700;cursor:pointer}
+@media (max-width:560px){.rsv{padding:34px 24px}}
+
+.rv{opacity:0;transform:translateY(26px);transition:opacity .9s ease,transform .9s ease}
+.rv.in{opacity:1;transform:none}
+
+@media (max-width:980px){
+  section{padding:96px 0}
+  .menu{display:none}
+  .hero-main{grid-template-columns:1fr;padding-top:24px;gap:10px}
+  .hero-art{margin:0 -14vw 0 -8vw}
+  .cells{grid-template-columns:1fr 1fr}
+  .cell{min-height:120px;border-top:1px solid var(--line)}
+  .cell:nth-child(2n){border-right:1px solid var(--line)}
+  .lines .g{grid-template-columns:repeat(2,1fr)}
+  .lines .g i:nth-child(n+3){display:none}
+  .sec-head{margin-bottom:48px}
+  .cal-d{display:none}
+  .cal-m{display:block}
+  .specs{grid-template-columns:1fr 1fr}
+  .specs div{border-left:0;padding:18px 0;border-bottom:1px solid var(--line2)}
+  .value{grid-template-columns:1fr;gap:44px}
+  .steps,.aud{grid-template-columns:1fr 1fr}
+  .st{min-height:300px}
+  .st:nth-child(2n),.aud div:nth-child(2n){border-right:1px solid var(--line)}
+  .st:nth-child(n+3),.aud div:nth-child(n+3){border-top:1px solid var(--line)}
+  .orbit{grid-template-columns:1fr;gap:34px}
+  .oc{gap:34px}
+  .oc.left .ann{text-align:left}.oc.left .ann h4{justify-content:flex-start}
+  .ann::after{display:none}
+  .ov{order:-1;max-width:460px;margin:0 auto}
+  .cmp,.notice{grid-template-columns:1fr}
+  .cmp .a{min-height:0;padding:40px 30px}
+  .final{padding-top:110px}
+}
+@media (max-width:560px){
+  .wrap{padding:0 20px}
+  .steps,.aud{grid-template-columns:1fr}
+  .st,.aud div{border-right:1px solid var(--line);border-top:1px solid var(--line)}
+  .pt p{font-size:20px}
+  .cmp .b{padding:30px 20px}
+  .notice>div{padding:34px 24px}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important}
+  .rv{opacity:1;transform:none}
+}
+</style>
+</head>
+<body>
+
+<!-- ============ shared graphics (sensor render + close-ups) ============ -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="metal" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#b9c1d6"/><stop offset=".16" stop-color="#626b80"/>
+      <stop offset=".5" stop-color="#1c1f2a"/><stop offset="1" stop-color="#090a0f"/>
+    </linearGradient>
+    <linearGradient id="edge" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#fff" stop-opacity=".95"/><stop offset=".35" stop-color="#fff" stop-opacity=".06"/>
+      <stop offset=".8" stop-color="#8296ff" stop-opacity=".15"/><stop offset="1" stop-color="#8296ff" stop-opacity=".6"/>
+    </linearGradient>
+    <linearGradient id="glass" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1e2334"/><stop offset="1" stop-color="#05060a"/></linearGradient>
+    <linearGradient id="glare" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".3"/><stop offset=".45" stop-color="#fff" stop-opacity="0"/></linearGradient>
+    <linearGradient id="strapL" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#4a4d5c" stop-opacity="0"/><stop offset=".7" stop-color="#3a3d4a" stop-opacity=".9"/><stop offset="1" stop-color="#2b2d38"/></linearGradient>
+    <linearGradient id="strapR" x1="1" y1="0" x2="0" y2="0"><stop offset="0" stop-color="#4a4d5c" stop-opacity="0"/><stop offset=".7" stop-color="#3a3d4a" stop-opacity=".9"/><stop offset="1" stop-color="#2b2d38"/></linearGradient>
+    <linearGradient id="strapShade" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".12"/><stop offset=".5" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".5"/></linearGradient>
+    <linearGradient id="strapZ" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#555867"/><stop offset="1" stop-color="#1a1b22"/></linearGradient>
+    <radialGradient id="bloom"><stop offset="0" stop-color="#8296ff" stop-opacity=".6"/><stop offset=".35" stop-color="#3a52ff" stop-opacity=".2"/><stop offset="1" stop-color="#3a52ff" stop-opacity="0"/></radialGradient>
+    <radialGradient id="zbloom"><stop offset="0" stop-color="#3a52ff" stop-opacity=".4"/><stop offset="1" stop-color="#3a52ff" stop-opacity="0"/></radialGradient>
+    <radialGradient id="vig"><stop offset=".4" stop-color="#07080c" stop-opacity="0"/><stop offset="1" stop-color="#07080c" stop-opacity=".85"/></radialGradient>
+    <linearGradient id="streak" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".95"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+    <pattern id="loop" width="6" height="6" patternUnits="userSpaceOnUse"><circle cx="1.5" cy="1.5" r=".9" fill="#fff" fill-opacity=".16"/><circle cx="4.5" cy="4.5" r=".9" fill="#fff" fill-opacity=".1"/></pattern>
+    <filter id="glow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <filter id="blur14"><feGaussianBlur stdDeviation="14"/></filter>
+    <filter id="blur2"><feGaussianBlur stdDeviation="2"/></filter>
+
+    <!-- sensor render: centered at 0,0 -->
+    <g id="sensorRender">
+      <rect x="-340" y="-58" width="230" height="116" fill="url(#strapL)"/>
+      <rect x="-340" y="-58" width="230" height="116" fill="url(#strapShade)"/>
+      <rect x="110" y="-58" width="230" height="116" fill="url(#strapR)"/>
+      <rect x="110" y="-58" width="230" height="116" fill="url(#strapShade)"/>
+      <path d="M-330 -36H-110M-330 36H-110M110 -36H330M110 36H330" stroke="#aeb3c8" stroke-opacity=".4" stroke-width="1.6" stroke-dasharray="6 7"/>
+      <rect x="-130" y="-114" width="260" height="260" rx="62" fill="#04050a"/>
+      <rect x="-130" y="-130" width="260" height="260" rx="62" fill="url(#metal)"/>
+      <rect x="-130" y="-130" width="260" height="260" rx="62" fill="url(#glare)"/>
+      <rect x="-129" y="-129" width="258" height="258" rx="61" fill="none" stroke="url(#edge)" stroke-width="2.2"/>
+      <rect x="-110" y="-110" width="220" height="220" rx="48" fill="#06070b" stroke="#fff" stroke-opacity=".08"/>
+      <rect x="-102" y="-102" width="204" height="204" rx="42" fill="url(#glass)"/>
+      <path d="M-102 -30L-30 -102H8L-102 8Z" fill="#fff" fill-opacity=".05"/>
+      <circle r="68" fill="none" stroke="#8296ff" stroke-opacity=".4" stroke-dasharray="2 6"/>
+      <circle r="42" fill="none" stroke="#8296ff" stroke-opacity=".28"/>
+      <g stroke="#a9b8ff" stroke-width="3" stroke-linecap="round" fill="none" filter="url(#glow)">
+        <path d="M0 8V-58"/><path d="M0 8L50 38"/><path d="M0 8L-50 38"/>
+      </g>
+      <g fill="#fff" filter="url(#glow)"><circle cx="0" cy="8" r="5.5"/><circle cx="0" cy="-58" r="3.5"/><circle cx="50" cy="38" r="3.5"/><circle cx="-50" cy="38" r="3.5"/></g>
+      <circle cx="78" cy="-78" r="6" fill="#c0bf34" filter="url(#glow)" class="pulse"/>
+    </g>
+  </defs>
+</svg>
+
+<nav>
+  <div class="wrap nav-in">
+    <a href="#top" class="logo">
+      <svg viewBox="0 0 26 26" fill="none" stroke="#fff" stroke-width="1.6"><circle cx="13" cy="6" r="3.2" fill="#fff"/><circle cx="5.5" cy="19.5" r="3.2" fill="#fff"/><circle cx="20.5" cy="19.5" r="3.2" fill="#fff"/><path d="M13 9.2L5.5 16.3M13 9.2l7.5 7.1M8.7 19.5h8.6" stroke-opacity=".55"/></svg>
+      MOVLOG
+    </a>
+    <div class="menu">
+      <a href="#solution">서비스 소개</a>
+      <a href="#features">핵심 기능</a>
+      <a href="#how">이용 방법</a>
+      <a href="#start">사전예약</a>
+    </div>
+    <a href="#start" class="btn fill sm">사전예약하기</a>
+  </div>
+</nav>
+
+<!-- ============ 01. HERO ============ -->
+<header class="hero" id="top">
+  <div class="spot" id="spot"></div>
+  <div class="lines"><div class="wrap"><div class="g"><i></i><i></i><i></i><i></i></div></div></div>
+
+  <div class="wrap hero-main">
+    <div class="rv">
+      <h1>내 움직임을 보는<br><em>새로운 방법.</em></h1>
+      <p>카메라 없이, 센서만으로 시작하는 모션 분석.<br>몸에 부착한 작은 센서가 나의 움직임을 읽고 기록합니다. 눈으로 확인하기 어려웠던 움직임의 차이까지 데이터와 시각화로 경험해 보세요.</p>
+      <div class="cta">
+        <a href="#start" class="btn fill">사전예약하기</a>
+        <a href="#solution" class="btn">서비스 알아보기</a>
+      </div>
+    </div>
+
+    <div class="hero-art" id="heroArt">
+      <svg viewBox="0 0 720 600" role="img" aria-label="MOVLOG IMU 센서 렌더 이미지">
+        <circle cx="380" cy="300" r="330" fill="url(#bloom)"/>
+        <ellipse cx="380" cy="296" rx="380" ry="3" fill="url(#streak)"/>
+        <ellipse cx="380" cy="296" rx="300" ry="14" fill="url(#streak)" opacity=".35" filter="url(#blur2)"/>
+        <g class="float"><use href="#sensorRender" transform="translate(360 290) rotate(-16)"/></g>
+        <g class="float" style="animation-delay:-3.5s"><use href="#sensorRender" transform="translate(575 470) rotate(13) scale(.5)" opacity=".9"/></g>
+      </svg>
+    </div>
+  </div>
+
+  <div class="wrap" style="position:relative">
+    <div class="cells">
+      <div class="cell"><span class="num">01</span><b>CAMERA FREE</b></div>
+      <div class="cell"><span class="num">02</span><b>IMU SENSOR</b></div>
+      <div class="cell"><span class="num">03</span><b>REAL-TIME</b></div>
+      <div class="cell"><span class="num">04</span><b>MOTION ANALYSIS</b></div>
+    </div>
+  </div>
+</header>
+
+<!-- ============ 02. PROBLEM ============ -->
+<section id="problem">
+  <div class="wrap value">
+    <div class="rv">
+      <h2>내가 움직이는 모습,<br>정말 제대로 알고 있을까요?</h2>
+      <p class="lead">운동을 반복해도 무엇이 달라졌는지 알기 어렵습니다. 영상으로 촬영해도 원하는 순간과 움직임을 정확하게 파악하기는 쉽지 않습니다.</p>
+      <p class="lead">내 움직임을 정확히 이해하는 것부터 변화는 시작됩니다.</p>
+    </div>
+    <div class="pts rv">
+      <div class="pt"><span class="num">01</span><p>보이지 않는 움직임<small>눈으로 확인하기 어려운 신체의 미세한 움직임</small></p></div>
+      <div class="pt"><span class="num">02</span><p>비교하기 어려운 차이<small>같은 동작도 반복할 때마다 달라지는 움직임</small></p></div>
+      <div class="pt"><span class="num">03</span><p>제한적인 분석 환경<small>카메라 설치와 촬영 공간이 필요한 기존 방식</small></p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 03. SOLUTION ============ -->
+<section id="solution">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <h2>카메라 없이도,<br>움직임은 충분히 읽을 수 있습니다</h2>
+      <p class="lead">MOVLOG는 IMU 센서를 활용해 신체의 움직임을 데이터로 기록하고 분석하는 웨어러블 모션캡처 서비스입니다.</p>
+      <p class="lead">센서를 착용하고 움직이면 동작 데이터가 무선으로 전송되고, 앱에서 나의 움직임을 직관적인 시각 자료로 확인할 수 있습니다.</p>
+      <p class="lead">움직임을 기록하는 것을 넘어, 나만의 움직임을 이해하는 새로운 경험을 제공합니다.</p>
+    </div>
+
+    <!-- desktop -->
+    <div class="rv">
+      <svg class="cal-d" viewBox="0 0 1100 560" role="img" aria-label="MOVLOG IMU 센서 렌더 이미지">
+        <circle cx="550" cy="280" r="330" fill="url(#bloom)" opacity=".85"/>
+        <ellipse cx="550" cy="276" rx="560" ry="2.5" fill="url(#streak)" opacity=".8"/>
+        <g class="float"><use href="#sensorRender" transform="translate(550 280) rotate(-12) scale(1.4)"/></g>
+      </svg>
+
+      <!-- mobile -->
+      <div class="cal-m">
+        <svg viewBox="0 0 720 460" style="display:block;width:100%;overflow:visible;margin-bottom:8px">
+          <circle cx="360" cy="230" r="280" fill="url(#bloom)"/>
+          <g class="float"><use href="#sensorRender" transform="translate(360 230) rotate(-12) scale(.95)"/></g>
+        </svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 04. KEY FEATURES ============ -->
+<section id="features">
+  <div class="wrap">
+    <div class="sec-head rv"><h2>핵심 기능</h2></div>
+
+    <div class="orbit">
+      <div class="oc left rv">
+        <div class="ann"><h4>카메라 없이 자유롭게<i></i></h4><p>카메라 촬영이나 별도의 촬영 공간 없이 센서만 착용하면 됩니다. 실내는 물론 야외와 다양한 현장에서도 움직임을 기록할 수 있습니다.</p></div>
+        <div class="ann"><h4>하나의 동작도 세밀하게<i style="border-color:var(--blue2)"></i></h4><p>하나의 동작을 여러 단계로 나누어 확인합니다. 동작의 시작부터 마무리까지 구간별 움직임과 차이를 확인할 수 있습니다.</p></div>
+      </div>
+
+      <div class="ov rv">
+        <svg viewBox="0 0 640 640" role="img" aria-label="MOVLOG 핵심 기능 4가지를 궤도로 표현한 다이어그램">
+          <circle cx="320" cy="320" r="300" fill="url(#bloom)" opacity=".5"/>
+          <g class="spin r" id="dustOuter"></g>
+          <g class="spin" id="dustInner"></g>
+          <g fill="none" stroke="#fff">
+            <circle cx="320" cy="320" r="60" stroke-opacity=".22"/>
+            <circle cx="320" cy="320" r="120" stroke-opacity=".2"/>
+            <circle cx="320" cy="320" r="180" stroke="#c0bf34" stroke-opacity=".85" stroke-width="1.4"/>
+            <circle cx="320" cy="320" r="240" stroke-opacity=".16"/>
+            <circle cx="320" cy="320" r="300" stroke-opacity=".12"/>
+          </g>
+          <path d="M320 80A240 240 0 0 0 320 560" fill="none" stroke="#8296ff" stroke-width="3" stroke-linecap="round" filter="url(#glow)"/>
+          <path d="M320 80A240 240 0 0 1 320 560" fill="none" stroke="#afa1ea" stroke-width="3" stroke-linecap="round" filter="url(#glow)"/>
+          <g stroke="#fff" stroke-opacity=".25" stroke-dasharray="2 5"><path d="M320 20V620M20 320H620"/></g>
+
+          <circle cx="320" cy="320" r="70" fill="#fff" opacity=".2" filter="url(#blur14)"/>
+          <circle cx="320" cy="320" r="26" fill="#fff" opacity=".55" filter="url(#blur14)"/>
+          <circle cx="320" cy="320" r="7" fill="#fff"/>
+
+          <g fill="#fff">
+            <circle cx="382" cy="300" r="4.5"/><circle cx="224" cy="352" r="4"/><circle cx="446" cy="360" r="3.5"/>
+            <circle cx="492" cy="566" r="9"/>
+          </g>
+          <g fill="#050507" stroke="#fff" stroke-width="1.5">
+            <circle cx="320" cy="140" r="6"/><circle cx="500" cy="320" r="6"/><circle cx="320" cy="500" r="6"/><circle cx="140" cy="320" r="6"/>
+          </g>
+          <g fill="none" stroke="#fff" stroke-opacity=".5"><circle cx="320" cy="140" r="13"/><circle cx="500" cy="320" r="13"/><circle cx="320" cy="500" r="13"/><circle cx="140" cy="320" r="13"/></g>
+          <g fill="#fff" font-size="15" font-weight="700" font-family="Pretendard Variable,Pretendard,sans-serif">
+            <text x="320" y="118" text-anchor="middle">CAMERA FREE</text>
+            <text x="524" y="326" text-anchor="start">MOTION ANALYSIS</text>
+            <text x="320" y="536" text-anchor="middle">MOTION VISUALIZATION</text>
+            <text x="116" y="326" text-anchor="end">INSTANT FEEDBACK</text>
+          </g>
+        </svg>
+      </div>
+
+      <div class="oc right rv">
+        <div class="ann"><h4><i style="border-color:var(--lime)"></i>움직임을 눈으로 확인하다</h4><p>센서로 수집한 데이터를 시각화해 신체의 움직임을 직관적으로 보여줍니다. 추상적인 감각을 구체적인 데이터로 확인할 수 있습니다.</p></div>
+        <div class="ann"><h4><i style="border-color:var(--purple)"></i>움직임에 바로 반응하다</h4><p>동작 중에는 진동을 통해 즉각적인 피드백을 받고, 앱에서 상세한 움직임 데이터와 분석 결과를 확인할 수 있습니다. 실시간 피드백과 기록을 통해 움직임의 변화를 놓치지 마세요.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 05. HOW IT WORKS ============ -->
+<section id="how">
+  <div class="wrap">
+    <div class="sec-head rv"><h2>착용부터 분석까지,<br>간단하게</h2></div>
+    <div class="steps" id="steps">
+      <div class="st">
+        <span class="num">01</span>
+        <svg viewBox="0 0 48 48"><rect x="3" y="18" width="42" height="12" rx="2"/><rect x="15" y="9" width="18" height="30" rx="6"/><circle cx="24" cy="17" r="1.6"/><path d="M20 28l4-5 4 5"/></svg>
+        <h4>WEAR</h4><p>센서를 신체에 부착합니다.</p>
+      </div>
+      <div class="st">
+        <span class="num">02</span>
+        <svg viewBox="0 0 48 48"><path d="M8 19a23 23 0 0 1 32 0M14 26a14 14 0 0 1 20 0"/><path d="M20 33a5 5 0 0 1 8 0"/><circle cx="24" cy="40" r="2"/></svg>
+        <h4>CONNECT</h4><p>무선으로 센서와 앱을 연결합니다.</p>
+      </div>
+      <div class="st">
+        <span class="num">03</span>
+        <svg viewBox="0 0 48 48"><circle cx="21" cy="8" r="4"/><path d="M21 15l-5 12 11 4M16 27l-6 14M27 31l3 10M21 17l11 5"/><path d="M36 14a10 10 0 0 1 6 8" stroke-dasharray="2 4"/></svg>
+        <h4>MOVE</h4><p>평소처럼 자유롭게 동작을 수행합니다.</p>
+      </div>
+      <div class="st">
+        <span class="num">04</span>
+        <svg viewBox="0 0 48 48"><path d="M6 41V7M6 41h36"/><path d="M11 32l9-10 6 5 14-17"/><circle cx="40" cy="10" r="2.5"/></svg>
+        <h4>ANALYZE</h4><p>수집된 데이터를 시각화하고 움직임을 비교합니다.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 06. DIFFERENCE ============ -->
+<section id="difference">
+  <div class="wrap">
+    <div class="sec-head rv"><h2>촬영하는 분석에서,<br>움직임을 읽는 분석으로.</h2></div>
+    <div class="cmp">
+      <div class="a rv">
+        <small>일반적인 피드백</small>
+        <div class="q">“자세가 좋지 않습니다.”</div>
+        <p>무엇이 달랐는지, 어느 구간을 살펴봐야 하는지 알기 어렵습니다.</p>
+      </div>
+      <div class="b rv">
+        <small>무브로그의 분석</small>
+        <div class="q2">실제로 기록된 움직임을 단계별로 보여줍니다.</div>
+        <p>내 동작끼리 비교해 어떤 구간에서 차이가 생겼는지 확인할 수 있습니다.</p>
+        <svg viewBox="0 0 560 230" role="img" aria-label="동작 단계별 움직임 그래프 예시">
+          <g stroke="#fff" stroke-opacity=".1"><path d="M0 60H560M0 115H560M0 170H560"/></g>
+          <rect x="250" y="0" width="80" height="230" fill="#8296ff" fill-opacity=".1"/>
+          <g stroke="#fff" stroke-opacity=".28" stroke-dasharray="2 5"><path d="M90 0V230M250 0V230M330 0V230"/></g>
+          <g fill="none" stroke-linecap="round">
+            <path d="M0 82H90C150 82 190 182 250 182C290 182 300 182 330 176C400 118 450 82 560 82" stroke="#fff" stroke-opacity=".16" stroke-width="2"/>
+            <path d="M0 70H92C152 70 192 172 252 174C292 174 304 172 334 166C402 108 452 70 560 70" stroke="#fff" stroke-opacity=".16" stroke-width="2"/>
+            <path d="M0 78H90C150 78 190 178 250 178C290 178 300 178 330 172C400 114 450 78 560 78" stroke="#8296ff" stroke-width="3.5" filter="url(#glow)"/>
+            <path d="M0 80H92C154 80 194 170 254 174C294 174 306 172 336 166C404 108 452 80 560 80" stroke="#c0bf34" stroke-width="3.5" filter="url(#glow)"/>
+          </g>
+        </svg>
+        <div class="cap">분석 화면 예시</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 07. WHO IT'S FOR ============ -->
+<section id="who">
+  <div class="wrap">
+    <div class="sec-head rv"><h2>더 나은 움직임을<br>원하는 사람들</h2></div>
+    <div class="aud rv">
+      <div style="--c:#8296ff"><h4>SPORTS</h4><p>선수와 스포츠 코치의 동작 분석</p></div>
+      <div style="--c:#afa1ea"><h4>FITNESS</h4><p>운동 동작을 기록하고 개선하고 싶은 사람</p></div>
+      <div style="--c:#c0bf34"><h4>EDUCATION</h4><p>체육 수업과 신체 움직임 교육</p></div>
+      <div style="--c:#fff"><h4>TRAINING</h4><p>반복 훈련과 동작 변화 관찰</p></div>
+    </div>
+    <p class="note rv">나의 움직임을 이해하는 일이 필요한 모든 순간에.</p>
+  </div>
+</section>
+
+<!-- ============ 08. PRE-RESERVATION ============ -->
+<section id="start">
+  <div class="wrap">
+    <div class="sec-head rv"><h2>나의 움직임을 이해하는 새로운 경험,<br>가장 먼저 만나보세요.</h2></div>
+    <div class="notice">
+      <div class="rv">
+        <p>MOVLOG가 준비하고 있는 새로운 모션 분석 서비스를 가장 먼저 경험해 보세요.</p>
+        <p style="margin-top:14px">지금 사전예약을 등록하면 출시 및 서비스 관련 소식을 우선적으로 받아볼 수 있습니다.</p>
+      </div>
+      <form class="rv rsv" id="rsvForm" novalidate>
+        <label>이름<input type="text" name="name" required autocomplete="name"></label>
+        <label>이메일 또는 연락처<input type="text" name="contact" required></label>
+        <label>신청 구분
+          <select name="user_type" required>
+            <option value="" selected disabled>선택해 주세요</option>
+            <option value="개인">개인 (직접 운동하는 사람)</option>
+            <option value="지도자">지도자 (코치·트레이너·강사)</option>
+            <option value="단체">단체 (팀·동호회·센터·학교)</option>
+          </select>
+        </label>
+        <label>관심 분야 (선택)<input type="text" name="interest" placeholder="예: 헬스, 수영, 골프"></label>
+        <input type="hidden" name="source" value="">
+        <p class="consent">수집 목적: 출시 및 서비스 소식 안내<br>수집 항목: 이름, 이메일 또는 연락처, 신청 구분, 관심 분야<br>보유 기간: 정식 출시 후 6개월 또는 동의 철회 시까지<br>동의하지 않으실 수 있으며, 이 경우 사전예약 신청이 어렵습니다.</p>
+        <label class="chk"><input type="checkbox" name="agree" required>개인정보 수집 및 이용에 동의합니다</label>
+        <button type="submit" class="btn fill">사전예약 신청하기</button>
+        <p class="msg" id="rsvMsg" role="status" aria-live="polite"></p>
+        <p class="ask">궁금한 점이 있으신가요? <a href="https://pf.kakao.com/_CICNX/chat" target="_blank" rel="noopener" data-kakao>카카오톡으로 문의하기</a></p>
+        <p class="fine">사전예약은 서비스 출시 전 관심 등록이며, 실제 제품 구매나 이용을 확정하는 절차는 아닙니다.</p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 09. FINAL ============ -->
+<section class="final" id="final">
+  <div class="wrap">
+    <h2 class="rv">움직임을 이해하면,<br>변화가 시작됩니다.</h2>
+    <p class="rv">기록하고, 비교하고, 발견하는 새로운 움직임의 기준.</p>
+    <a href="#start" class="btn fill rv">사전예약하고 먼저 만나보기</a>
+    <div class="giant" aria-hidden="true">MOVLOG</div>
+  </div>
+</section>
+
+<a class="kakao-fab" href="https://pf.kakao.com/_CICNX/chat" target="_blank" rel="noopener" data-kakao aria-label="카카오톡으로 문의하기">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#191919" d="M12 3C6.48 3 2 6.58 2 11c0 2.83 1.84 5.31 4.61 6.73l-.94 3.44c-.08.3.26.54.52.37l4.1-2.71c.56.08 1.13.12 1.71.12 5.52 0 10-3.58 10-8s-4.48-8-10-8z"/></svg>
+  문의하기
+</a>
+
+<div class="rsv-modal" id="rsvModal" role="dialog" aria-modal="true" aria-labelledby="rsvModalTitle">
+  <div class="box">
+    <div class="icon">✓</div>
+    <h3 id="rsvModalTitle">사전예약이 완료되었습니다</h3>
+    <p>MOVLOG에 관심 가져 주셔서 감사합니다.<br>출시 소식을 가장 먼저 알려드릴게요.</p>
+    <button type="button" id="rsvModalClose">확인</button>
+  </div>
+</div>
+
+<footer>
+  <div class="wrap">
+    <b>MOVLOG</b>
+    <span>MOVE BETTER. KNOW YOUR BODY.</span>
+  </div>
+</footer>
+
+
+<script>
+(function(){
+  /* reveal */
+  var els=document.querySelectorAll('.rv,#steps');
+  if(!('IntersectionObserver' in window)){els.forEach(function(e){e.classList.add('in')})}
+  else{
+    var io=new IntersectionObserver(function(es){
+      es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})
+    },{threshold:.12});
+    els.forEach(function(e,i){if(!e.id)e.style.transitionDelay=(i%3)*80+'ms';io.observe(e)});
+  }
+
+  /* cursor spotlight + hero parallax */
+  var hero=document.getElementById('top'),spot=document.getElementById('spot'),art=document.getElementById('heroArt');
+  var reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(hero&&!reduce){
+    hero.addEventListener('mousemove',function(e){
+      var r=hero.getBoundingClientRect(),x=(e.clientX-r.left)/r.width,y=(e.clientY-r.top)/r.height;
+      spot.style.setProperty('--mx',(x*100)+'%');spot.style.setProperty('--my',(y*100)+'%');
+      if(art)art.style.transform='translate('+((x-.5)*-22)+'px,'+((y-.5)*-16)+'px)';
+    });
+  }
+
+  /* dust rings for orbit diagram */
+  var NS='http://www.w3.org/2000/svg';
+  function dust(id,n,r0,r1,maxA){
+    var g=document.getElementById(id);if(!g)return;
+    var f=document.createDocumentFragment();
+    for(var i=0;i<n;i++){
+      var a=Math.random()*Math.PI*2;
+      var t=(Math.random()+Math.random())/2;
+      var r=r0+(r1-r0)*t;
+      var c=document.createElementNS(NS,'circle');
+      c.setAttribute('cx',(320+Math.cos(a)*r).toFixed(1));
+      c.setAttribute('cy',(320+Math.sin(a)*r).toFixed(1));
+      c.setAttribute('r',(Math.random()*1.1+.35).toFixed(2));
+      c.setAttribute('fill','#fff');
+      c.setAttribute('fill-opacity',(Math.random()*maxA+.05).toFixed(2));
+      f.appendChild(c);
+    }
+    g.appendChild(f);
+  }
+  dust('dustInner',1300,196,296,.6);
+  dust('dustOuter',500,130,306,.35);
+})();
+
+/* kakao inquiry click tracking (GA4 when installed) */
+document.querySelectorAll('[data-kakao]').forEach(function(a){
+  a.addEventListener('click',function(){
+    if(typeof gtag==='function'){gtag('event','click_kakao',{position:a.classList.contains('kakao-fab')?'floating':'form'});}
+  });
+});
+
+/* pre-reservation form -> Google Sheets (Apps Script) */
+(function(){
+  var ENDPOINT='https://script.google.com/macros/s/AKfycbxE3NNdCjS2on0-38vAXUEgBH4f8fEWddQStRtZOFMOC9UOqG7b0Q8vXug4nhzliAEz/exec';
+  var form=document.getElementById('rsvForm');
+  if(!form)return;
+  var msg=document.getElementById('rsvMsg');
+  var btn=form.querySelector('button[type=submit]');
+
+  /* 유입 경로: utm_source가 있으면 그 값, 없으면 direct */
+  var q=new URLSearchParams(location.search);
+  var src=q.get('utm_source')||'direct';
+  if(q.get('utm_medium'))src+=' / '+q.get('utm_medium');
+  form.elements.source.value=src;
+
+  function show(text,type){msg.textContent=text;msg.className='msg '+(type||'');}
+
+  var modal=document.getElementById('rsvModal');
+  var closeBtn=document.getElementById('rsvModalClose');
+  function openModal(){modal.classList.add('open');closeBtn.focus();}
+  function closeModal(){modal.classList.remove('open');}
+  closeBtn.addEventListener('click',closeModal);
+  modal.addEventListener('click',function(e){if(e.target===modal)closeModal();});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape')closeModal();});
+
+  form.addEventListener('submit',function(ev){
+    ev.preventDefault();
+    var f=form.elements;
+    if(!f.name.value.trim()){show('이름을 입력해 주세요.','err');f.name.focus();return;}
+    if(!f.contact.value.trim()){show('이메일 또는 연락처를 입력해 주세요.','err');f.contact.focus();return;}
+    if(!f.user_type.value){show('신청 구분을 선택해 주세요.','err');f.user_type.focus();return;}
+    if(!f.agree.checked){show('개인정보 수집 및 이용에 동의해 주세요.','err');return;}
+
+    var data=new URLSearchParams();
+    data.append('name',f.name.value.trim());
+    data.append('contact',f.contact.value.trim());
+    data.append('user_type',f.user_type.value);
+    data.append('interest',f.interest.value.trim());
+    data.append('source',f.source.value);
+
+    btn.disabled=true;show('신청을 보내는 중입니다…');
+    fetch(ENDPOINT,{method:'POST',body:data})
+      .then(function(r){return r.text();})
+      .then(function(t){
+        if(t.trim()!=='ok')throw new Error('bad response');
+        form.reset();form.elements.source.value=src;
+        show('사전예약이 완료되었습니다.','ok');
+        openModal();
+        if(typeof gtag==='function'){gtag('event','generate_lead',{user_type:data.get('user_type')});}
+      })
+      .catch(function(){
+        show('전송에 실패했습니다. 잠시 후 다시 시도해 주세요.','err');
+      })
+      .then(function(){btn.disabled=false;});
+  });
+})();
+</script>
+</body>
+</html>
